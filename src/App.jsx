@@ -16,6 +16,7 @@ import JobsPage from "./pages/Jobs/JobsPage";
 
 // import MyApplication from "./pages/MyApplication/MyApplication";
 import MyApplication from "./tasksComponent/myApplication/myApplication.jsx";
+import { EditeProfilePage } from "./tasksComponent/editeProfilePage/EditeProfilePage.jsx";
 
 function App() {
 	return (
@@ -43,6 +44,8 @@ function App() {
 				<Route path="/UpdatePasswordUser" Component={UpdatePassUser} />
 				{/* my application component route */}
 				<Route path="/myapps" Component={MyApplication} />
+				{/* Edite Profile Data Route */}
+				<Route path="/editeprofiledata" Component={EditeProfilePage} />
 			</Routes>
 
 			<Footer />
