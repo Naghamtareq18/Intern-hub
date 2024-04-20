@@ -1,13 +1,24 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./EditeProfilePage.css";
-import "../vars.css";
-import { useState } from "react";
+import ".././vars.css";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Avatar from "react-avatar-edit";
-import axios from "axios";
+import AvatarPicture from "../../assets/images/avatar.png";
+import { Dialog } from "primereact/dialog";
+// import { Avatar } from "@mantine/core";
+// import { httpRequest } from "../../../core/utils/httpRequest.js";
+// import API_CONFIG from "../../../core/utils/apiConfig.js";
+
+// you can recomented your import above dependent your project
+import { httpRequest } from "../../core/utils/httpRequest.js";
+import API_CONFIG from "../../core/utils/apiConfig.js";
 
 export const EditeProfilePage = () => {
+	// const token = JSON.parse(localStorage.getItem("userInfo")).data.token;
 	const [userName, setUserName] = useState("");
+	const [emailValue, setEmail] = useState("");
+
 	const [birthdate, setBirthdate] = useState("");
 	const [bio, setBio] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState();
@@ -17,7 +28,7 @@ export const EditeProfilePage = () => {
 		address: "",
 	});
 	const [gender, setGender] = useState("");
-	const [status, setStatus] = useState("");
+	// const [status, setStatus] = useState("");
 	const [exprienceYears, setExprienceYears] = useState("");
 	const [skills, setSkills] = useState("");
 	const [allSkills, setAllSkills] = useState([]);
@@ -25,14 +36,25 @@ export const EditeProfilePage = () => {
 	const [allInterested, setAllInterested] = useState([]);
 	const [cv, setCV] = useState("");
 
-	// profile ficture edit
-	const [profilePicture, setProfilePicture] = useState("");
-	const onClose = () => {
-		setProfilePicture(null);
+	const handleCVChange = (e) => {
+		const file = e.target.files[0];
+		setCV(file);
 	};
+	// profile ficture edit
+	const [imageCrop, setImageCrop] = useState(false);
+	const [profilePicture, setProfilePicture] = useState(AvatarPicture);
+	const [pview, setPview] = useState(false);
 
+	// image crop
+	const onClose = () => {
+		setPview(null);
+	};
 	const onCrop = (view) => {
-		setProfilePicture(view);
+		setPview(view);
+	};
+	const saveCropImage = () => {
+		setProfilePicture(pview);
+		setImageCrop(false);
 	};
 
 	const generateRandomId = () => {
@@ -69,6 +91,7 @@ export const EditeProfilePage = () => {
 		);
 		setAllInterested(data);
 	};
+	// PUT requist
 	const onSubmitHandler = (e) => {
 		e.preventDefault();
 
@@ -80,24 +103,55 @@ export const EditeProfilePage = () => {
 			exprienceYears,
 			allSkills,
 			gender,
-			status,
+			// status,
 			cv,
 			birthdate,
 			bio,
 			allInterested,
 		});
 
-		try {
-			axios
-				.post(
-					"https://api.codesplus.online/api/v1/user/updateUserprofile",
-					userData
-				)
-				.then(() => console.log("data updated"));
-		} catch (e) {
-			console.log(e);
-		}
+		httpRequest(API_CONFIG.endpoints.user.updateUser, "PUT", userData, {
+			Authorization:
+				"internHub__eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVc2VyN2FkNjc1NTUtZTQwMi00NTIyLWFjMjQtNzEwMTBiNTA3Mzk5Iiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MTMzNTIyNDQsImV4cCI6MTcxMzQzODY0NH0.qZLOyanF7NNah8M3XY_yfZ-_1RSs0AtOjfoYuIKWUaY",
+		}).then((result) => {
+			console.log(result);
+		});
 	};
+	// get user data
+	useEffect(() => {
+		httpRequest(
+			API_CONFIG.endpoints.user.fetchUser,
+			"GET",
+			{},
+			{
+				Authorization:
+					"internHub__eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVc2VyN2FkNjc1NTUtZTQwMi00NTIyLWFjMjQtNzEwMTBiNTA3Mzk5Iiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MTMzNTIyNDQsImV4cCI6MTcxMzQzODY0NH0.qZLOyanF7NNah8M3XY_yfZ-_1RSs0AtOjfoYuIKWUaY",
+			}
+		).then((result) => {
+			const userData = result.data.data;
+			console.log(userData);
+			setProfilePicture(userData.profileImage || "");
+			setEmail(userData.email);
+			setUserName(userData.userName || "");
+			const backendDate = userData.birthdate
+				? userData.birthdate.split("T")[0]
+				: "";
+			setBirthdate(backendDate || "");
+			setBio(userData.bio || "");
+			setPhoneNumber(userData.phone || "");
+			setAddress({
+				city: userData.address.city || "",
+				country: userData.address.country || "",
+				address: userData.address.address || "",
+				// country:userData.address.country || "",
+			});
+			setGender(userData.gender || "");
+			setExprienceYears(userData.experienceYears || "");
+			setSkills(userData.skills || "");
+			setAllInterested(userData.fieldOfInterest || "");
+			setCV(userData.cv || "");
+		});
+	}, []);
 
 	return (
 		<div className="edite-profile-data font-color">
@@ -109,21 +163,43 @@ export const EditeProfilePage = () => {
 					<Form onSubmit={onSubmitHandler}>
 						{/* image */}
 
-						<div className="image-crop-container">
-							<div className="profile-img-container">
-								<img
-									className="profile-img"
-									src={profilePicture}
-									alt="profile picture"
-								/>
-							</div>
-							<div className="crop">
-								<Avatar
-									width={250}
-									height={250}
-									onCrop={onCrop}
-									onClose={onClose}
-								/>
+						<div className="d-flex justify-content-center align-items-center">
+							<div className="text-center p-4">
+								<div className="d-flex flex-column justify-content-center align-items-center">
+									<img
+										className="profile-img"
+										src={profilePicture}
+										alt="profile picture"
+										onClick={() => setImageCrop(true)}
+									/>
+									<Dialog
+										visible={imageCrop}
+										header={() => {
+											<p
+												htmlFor=""
+												className="text-2xl font-seibold textColor"
+											></p>;
+										}}
+										onHide={() => setImageCrop(false)}
+									>
+										<div className="crop">
+											<Avatar
+												width={250}
+												height={250}
+												onCrop={onCrop}
+												onClose={onClose}
+											/>
+											<div className="d-flex justify-content-center align-items-center">
+												<Button
+													onClick={saveCropImage}
+													className="btn btn-primary m-3"
+												>
+													SAVE
+												</Button>
+											</div>
+										</div>
+									</Dialog>
+								</div>
 							</div>
 						</div>
 						{/* user img */}
@@ -172,7 +248,7 @@ export const EditeProfilePage = () => {
 									<Form.Label>Email</Form.Label>
 								</Col>
 								<Col sm="10">
-									<Form.Control value="email@example.com" disabled />
+									<Form.Control value={emailValue} disabled />
 								</Col>
 							</Form.Group>
 						</Col>
@@ -290,7 +366,7 @@ export const EditeProfilePage = () => {
 							</Form.Group>
 						</Col>
 						{/* status */}
-						<Col>
+						{/* <Col>
 							<Form.Group as={Row} className="mb-3">
 								<Col sm="2">
 									<Form.Label>Status</Form.Label>
@@ -308,7 +384,7 @@ export const EditeProfilePage = () => {
 									</Form.Select>
 								</Col>
 							</Form.Group>
-						</Col>
+						</Col> */}
 						{/* exprience year */}
 						<Form.Group as={Row} className="mb-3">
 							<Col sm="2">
@@ -398,14 +474,15 @@ export const EditeProfilePage = () => {
 						{/* resume */}
 						<Form.Group as={Row} controlId="formFileLg" className="mb-3">
 							<Col sm="2">
-								<Form.Label>Uploud CV</Form.Label>
+								<Form.Label>Upload CV</Form.Label>
 							</Col>
 							<Col sm="10">
+								<div>{cv ? <div>{cv}</div> : <div>No file selected</div>}</div>
 								<Form.Control
 									type="file"
 									size="lg"
 									name="cv"
-									onChange={(e) => setCV(e.target.files[0])}
+									onChange={handleCVChange}
 								/>
 							</Col>
 						</Form.Group>

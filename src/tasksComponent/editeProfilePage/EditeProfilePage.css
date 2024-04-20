@@ -1,3 +1,16 @@
+.crop {
+	background-color: #fff;
+}
+div#pr_id_3 {
+	background-color: white;
+	padding: 30px;
+	box-shadow: 0 4px 8px 0 #e9ecef, 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	overflow: hidden;
+}
+div#pr_id_3_content {
+	overflow: hidden;
+}
+
 .edite-profile-data {
 	margin: 100px 0px;
 }

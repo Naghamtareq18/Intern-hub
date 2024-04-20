@@ -16,6 +16,7 @@ import JobsPage from "./pages/Jobs/JobsPage";
 
 // import MyApplication from "./pages/MyApplication/MyApplication";
 import MyApplication from "./tasksComponent/myApplication/myApplication.jsx";
+// import { EditeProfilePage } from "./tasksComponent/editeProfilePage/EditeProfilePage.jsx";
 import { EditeProfilePage } from "./tasksComponent/editeProfilePage/EditeProfilePage.jsx";
 
 function App() {
