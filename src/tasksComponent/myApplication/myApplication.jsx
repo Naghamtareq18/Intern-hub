@@ -9,7 +9,7 @@ import { MdHelpOutline } from "react-icons/md";
 import { FaRocket } from "react-icons/fa6";
 import { FiFileText } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import Pagination from "./pagination";
+import Pagination from "../../pages/Companies/paginationComponent/pagination";
 
 export const MyApplication = () => {
 	const [appData, setAppData] = useState([]);

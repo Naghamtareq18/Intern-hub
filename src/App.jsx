@@ -2,8 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import LoginCompanies from "./pages/Companies/LoginCompanies/LoginCompanies";
 import SignupCompanies from "./pages/Companies/SignupCompanies/SignupCompanies";
-import LoginUser from "./pages/User/LoginUser/LoginUser";
-import SignupUser from "./pages/User/SignupUser/SignupUser";
+// import LoginUser from "./pages/User/LoginUser/LoginUser";
+// import SignupUser from "./pages/User/SignupUser/SignupUser";
 import "@mantine/core/styles.css";
 import Header from "./pages/Home/components/Header/Header";
 import { Footer } from "./pages/Home/components/Footer/Footer";
@@ -16,6 +16,7 @@ import MyApplication from "./pages/User/ApplicationUser/myApplication.jsx";
 import EditeProfilePage from "./pages/User/editeProfilePage/EditeProfilePage.jsx";
 import JobDetails from "./pages/Jobs/JobDetails/JobDetails.jsx";
 import JobsPage from "./pages/Jobs/JobsPage.jsx";
+import ComponyApps from "./tasksComponent/conponyApps/ComponyApps.jsx";
 // import Chat from "./pages/chat/Chat.jsx";
 
 function App() {
@@ -34,8 +35,8 @@ function App() {
 				<Route path="/SignupCompanies" Component={SignupCompanies} />
 				<Route path="/LoginCompanies" Component={LoginCompanies} />
 
-				<Route path="/SignupUser" Component={SignupUser} />
-				<Route path="/LoginUser" Component={LoginUser} />
+				{/* <Route path="/SignupUser" Component={SignupUser} />
+				<Route path="/LoginUser" Component={LoginUser} /> */}
 				<Route path="/ForgetPassword" Component={ForgetPass} />
 				<Route path="/UpdatePassword" Component={UpdatePassUser} />
 				<Route path="/ChangePassword" Component={ChangePass} />
@@ -44,6 +45,7 @@ function App() {
 				{/* my application component route */}
 				<Route path="/user/myapps" Component={MyApplication} />
 				<Route path="/user_profile" Component={EditeProfilePage} />
+				<Route path="/componyapps" Component={ComponyApps} />
 				{/* <Route path="/chat" Component={Chat} /> */}
 			</Routes>
 			<Footer />
